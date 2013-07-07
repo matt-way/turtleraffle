@@ -1,0 +1,154 @@
+@import "lesshat";
+
+@darktext: #272727;
+@white: #FFF;
+
+html {
+	height: 100%;
+}
+
+body {
+  padding-top: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  //font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 16px "Lato", Helvetica, Arial, sans-serif;
+
+  .gradient(~"radial-gradient(ellipse at center, #84B89E 0%, #84B89D 100%)");
+}
+
+a {
+  color: #00B7FF;
+}
+
+.banner {
+	height: 40px;
+	background-color: @white;
+}
+
+.banner-container {
+	padding-top: 8px;
+}
+
+.banner-sub {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.title {
+	float: left;
+	font-size: 20px;
+	font-weight: 900;
+	color: @darktext;
+
+	a {
+		color: @darktext;
+
+		&:hover{
+			text-decoration: none;
+			//color: ;
+		}
+	}
+}
+
+.little-turtle {
+	font-size: 15px;
+	float: left;
+	margin-left: 11px;
+	margin-top: 5px;
+}
+
+.tr-top {
+	margin-top: 15px;
+}
+
+.desc-left {
+	float: left;
+	width: 70%;
+}
+
+.social-links {
+	float: right;
+	width: 70px;
+	//margin-right: 0px;
+	position: absolute;
+	right: 10px;
+}
+
+.facebook {
+	float: left;
+	width: 100%;
+}
+
+.twitter {
+	float: left;
+	width: 100%;
+}
+
+.banner-right {
+	float: right;
+}
+
+.countdown {	
+	font-size: 18px;
+}
+
+.entry-count {
+	font-size: 12px;
+	margin-left: 10px;
+}
+
+.winner {
+	font-weight: 700;
+	border-left: 2px solid rgb(116, 116, 116);	
+	padding-left: 10px;
+	padding-bottom: 3px;	
+	/*
+	font-weight: 700;
+	border-left: 2px solid #000;
+	*/
+	background-color: rgba(0, 0, 0, 0.1);
+	width: 142px;
+	border-left: 2px solid rgb(116, 116, 116);	
+}
+
+.tr-post {	
+	background-color: @white;
+	min-height: 380px;
+	margin-top: 20px;	
+	padding-top: 10px;
+	margin-bottom: 40px;
+}
+
+.media {
+	margin-top: 20px;
+}
+
+.post-title {
+	margin-top: 20px;
+	font-weight: 900;
+}
+
+.post-body {
+	padding: 20px 0px 10px 0px;
+}
+
+.post-handle {
+	margin-left: 10px;
+	padding-bottom: 25px;
+}
+
+/* bootstrap overrides */
+.navbar {
+	/*position: relative;*/
+	padding: 0px 15px;
+}
+
+.create-form {
+	background-color: @white;
+	padding: 22px 15px;
+}
+
+.button-gap {
+	height: 10px;
+}

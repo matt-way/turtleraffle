@@ -1,0 +1,50 @@
+<div class="container">
+	<div class="row">
+		<div class="col-span-8 col-offset-2 tr-top create-form">
+			<form name="post" novalidate>
+				<fieldset>
+					<label>1. Title</label>
+					<input type="text" name="title" ng-model="title" required>
+					<span class="help-block">Give your post a title.</span>
+					<label>2. Media Link</label>
+					<input type="url" name="media" ng-model="media">
+					<span class="help-block">Enter a URL that points to some content (eg. image, video, or a website). This will be embedded at the top of your post.</span>
+					<label>3. Your post text</label>
+					<textarea rows="10" name="body" ng-model="body" required></textarea>
+					<span class="help-block">Write what ever you want here.</span>
+					<label>4. Name/Handle</label>
+					<input type="text" name="name" ng-model="name">
+					<span class="help-block">Enter a name to go at the bottom of the post.</span>
+					<label>5. Captcha</label>
+					
+					<script type="text/javascript">
+						var ACPuzzleOptions = {
+							theme:	'white',
+							lang:	'en',
+							size:	'300x150'
+						};
+					</script>
+					<script type="text/javascript" src="http://api.solvemedia.com/papi/challenge.script?k=zxEtcKYEGz3EM0YXVjEa7hE6sedQUwM-">
+  					</script>
+  					
+     					<iframe src="http://api.solvemedia.com/papi/challenge.noscript?k=zxEtcKYEGz3EM0YXVjEa7hE6sedQUwM-" height="300" width="500" frameborder="0"></iframe><br/>
+     					<textarea name="adcopy_challenge" ng-model="adcopy_challenge" rows="3" cols="40"></textarea>
+     					<input type="hidden" name="adcopy_response"	value="manual_challenge" ng-model="adcopy_response" required>		
+
+					<span class="help-block">Let's make sure you are human.</span>
+					<div class="button-gap"></div>
+					<button class="btn btn-primary" ng-click="createPost(post)">Create Post!</button>
+					<button class="btn btn-primary" ng-click="cancelPost()">{{cancelText}}</button>
+					<div ng-show="showError" class="err-notice bold">
+						<h4>Error</h4>
+						<p>{{err}}</p>			
+					</div>
+					<!--
+					<span class="error" ng-show="post.$error.required">Required!</span>
+  					<span class="error" ng-show="post.$error.url">Invalid URL format!</span>
+  					-->
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>

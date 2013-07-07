@@ -1,0 +1,78 @@
+
+so page loads
+- user sees main page
+	- need to pass total entries and current counter time to page
+		* or we can just use short polling, and use the api to get this information...
+		- we could use socket.io and a timer to update entry counts
+		- that way we could even signal the sock.io updater to push the post changes when they occur
+
+- need a timer in node
+	- the timer must continue working even if the server resets
+	- ok, so use redis to store the job, and on restart grab the job from redist, and calculate the time until the next draw
+
+- we could store the posts in redis for maximum speed
+	- and then when the job timer finishes it:
+		- randomly select n posts
+		- builds an output object and stores this in redis as the current winners
+			- we could store older winners too??
+			- this might be good, so that people can scroll if they want to
+
+user experience:
+- what does the user see on page load?
+	- the posts are the primary focus
+	- also:
+		- the ability to enter a post
+			- this could be a modal?
+			- but it would be nice to have preview
+		- timer count-down until next draw
+		- the number of entries in the draw
+		- link to about <- this could be a collapsible frame
+			- the about should be quite obvious though
+			- maybe collapsible only on mobile
+
+mobiles should link externally, while other devices should show item inside frame
+
+so check if mobile, 
+
+
+- so we need to get the timeleft, post, and number of entries
+- post info
+	- only needs to be grabbed once
+	- also needs to be grabbed if on the site, and the time clocks over 0
+		- could put selecting... for say 10 seconds and then do a soft poll?
+	- could do it via socket.
+	- on connection to socket, the server would emit the time left, the number of entries, and the post data.
+		- every n seconds server side would check if there has been an entry update and send it if so.
+		- if the posts are updated, this data is also sent through.
+	- post entry can still be via usual /create post
+		- the data is validated, and if successful the post is written to the server
+- lastly we need a cron job to select the post every 23 hours.
+- we also need to use embedly to get the embed information
+- 
+
+
+- get post creation/validation working
+	- look into redis mass deletions
+	- add a bunch of posts and retrieve one
+	- should add support for title/thumbnail/url of final output for mobile
+		- we can do mobile check now due to api usage instead of sockets
+
+- form validation
+- storing and deleting in redis
+- embedly local
+- timer cron
+- polish
+
+
+form validation
+- setup what each form element should achieve within the html, possibly adding directives if custom requirement.
+	- these will set the internal validators of each form depending on the state
+	- there are also special values representing when form inputs change, etc
+- if these are correct, then process with an http post.
+- on the node side, use node-validator to perform server side validation.
+	- a negative will automatically build a json object containing the error messages for return
+- then on the form side, an error element should be bound to ng-show and also to any error text returned. This could simply go before/after the button or whatever the styling requirement
+
+
+// setup redis to store the winning entry
+// and retrieve it 

@@ -1,0 +1,124 @@
+html {
+  height: 100%;
+}
+body {
+  padding-top: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font: 16px "Lato", Helvetica, Arial, sans-serif;
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMSAxIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj48cmFkaWFsR3JhZGllbnQgaWQ9ImdyYWQtdWNnZy1nZW5lcmF0ZWQiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjeD0iNTAlIiBjeT0iNTAlIiByPSI3NSUiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM4NEI4OUUiIHN0b3Atb3BhY2l0eT0iMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzg0Qjg5RCIgc3RvcC1vcGFjaXR5PSIxIi8+PC9yYWRpYWxHcmFkaWVudD48cmVjdCB4PSItNTAiIHk9Ii01MCIgd2lkdGg9IjEwMSIgaGVpZ2h0PSIxMDEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+PC9zdmc+);
+  background-image: -moz-radial-gradient(center, ellipse, #84B89E 0%, #84B89D 100%);
+  background-image: -webkit-radial-gradient(center, ellipse, #84B89E 0%, #84B89D 100%);
+  background-image: -o-radial-gradient(center, ellipse, #84B89E 0%, #84B89D 100%);
+  background-image: radial-gradient(ellipse at center, #84B89E 0%, #84B89D 100%);
+}
+a {
+  color: #00B7FF;
+}
+.banner {
+  height: 40px;
+  background-color: #ffffff;
+}
+.banner-container {
+  padding-top: 8px;
+}
+.banner-sub {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.title {
+  float: left;
+  font-size: 20px;
+  font-weight: 900;
+  color: #272727;
+}
+.title a {
+  color: #272727;
+}
+.title a:hover {
+  text-decoration: none;
+}
+.little-turtle {
+  font-size: 15px;
+  float: left;
+  margin-left: 11px;
+  margin-top: 5px;
+}
+.tr-top {
+  margin-top: 15px;
+}
+.desc-left {
+  float: left;
+  width: 70%;
+}
+.social-links {
+  float: right;
+  width: 70px;
+  position: absolute;
+  right: 10px;
+}
+.facebook {
+  float: left;
+  width: 100%;
+}
+.twitter {
+  float: left;
+  width: 100%;
+}
+.banner-right {
+  float: right;
+}
+.countdown {
+  font-size: 18px;
+}
+.entry-count {
+  font-size: 12px;
+  margin-left: 10px;
+}
+.winner {
+  font-weight: 700;
+  padding-left: 10px;
+  padding-bottom: 3px;
+  /*
+	font-weight: 700;
+	border-left: 2px solid #000;
+	*/
+
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 142px;
+  border-left: 2px solid #747474;
+}
+.tr-post {
+  background-color: #ffffff;
+  min-height: 380px;
+  margin-top: 20px;
+  padding-top: 10px;
+  margin-bottom: 40px;
+}
+.media {
+  margin-top: 20px;
+}
+.post-title {
+  margin-top: 20px;
+  font-weight: 900;
+}
+.post-body {
+  padding: 20px 0px 10px 0px;
+}
+.post-handle {
+  margin-left: 10px;
+  padding-bottom: 25px;
+}
+/* bootstrap overrides */
+.navbar {
+  /*position: relative;*/
+
+  padding: 0px 15px;
+}
+.create-form {
+  background-color: #ffffff;
+  padding: 22px 15px;
+}
+.button-gap {
+  height: 10px;
+}
