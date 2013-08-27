@@ -1,9 +1,9 @@
 /**
 Routes
 **/
-var sa = require('superagent')
-  , redis = require('redis')
-  , client = redis.createClient();
+var sa = require('superagent');
+  //, redis = require('redis')
+  //, client = redis.createClient();
 
 
 exports.index = function(req, res){
@@ -41,6 +41,7 @@ exports.posts = function(req, res){
 
 exports.create = function(req, res, next){
 	// validate the post
+	// perform size bounds checks
 	req.assert('title', 'Title is required.').notEmpty();
 	req.assert('body', 'Content text is required.').notEmpty();
 
@@ -58,9 +59,15 @@ exports.create = function(req, res, next){
 			console.log(util.inspect(result, false, null));
 
 			// if the captcha is correct
-
 			// add the post to the db
+			
+			// return the new count
+
+
 			// get the next available index
+			
+
+			/*
 			client.INCR('curPostIndex', function(err, result){
 				if(err) { return res.next(err); }
 
@@ -78,7 +85,8 @@ exports.create = function(req, res, next){
 					return res.send(true);
 				})
 			})
-		})
+			*/
+		});
 	}else{
 		res.send(errors);
 	}

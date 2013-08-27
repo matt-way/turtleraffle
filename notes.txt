@@ -76,3 +76,48 @@ form validation
 
 // setup redis to store the winning entry
 // and retrieve it 
+
+
+
+
+26-8-13
+TODO:
+setup post model in mongo (CRUD)
+figure out how to do random post selection and db clearing
+get posts creating successfully
+get timer process running (start with 20 seconds or so)
+	- need to cater for crashing, etc, so use a time store or something
+get random selection working (if available)
+	- selects random post (no clearing for the moment)
+	- runs embedly on url if applicable
+	- stores post information in current post area
+temporarily turn off random selection (after one has been selected)
+on server load, grab the current post if one is available
+get current post loading on main screen
+get client working on countdown
+	- timer needs to say loading... or something
+	- timer also needs to reset correctly
+	- post needs to update correctly
+		- need to take into account situation when user is on entry page
+what happens if user tries to enter new post during selection process?
+need to add limits and errors on form entry
+perform local testing
+	- might have to ignore captcha stuff (could look into aussie captcha thing too)
+	- make sure everything is ready to roll
+setup mongo on server
+add project to sever
+get nginx working for site data redirection
+setup server ip linking
+test server side url
+test capctha system on server
+test visuals on different systems (mobile)
+design initial post (copy for later)
+	- clear, set small timer and add initial post
+	- set timer to 23 hours
+setup grunt/yeoman (good test for memebig too)
+test server again
+test facebook/twitter links (twitter first maybe)
+---------
+CELEBRATE
+---------
+

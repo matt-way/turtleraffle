@@ -120,8 +120,7 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 	}
 
 	// cancel button
-	$scope.cancelPost = function() {
-		console.log('hi there tard');
+	$scope.cancelPost = function() {		
 		if($scope.cancelState == 0){
 			$scope.cancelText = 'Click again to confirm';
 			$scope.cancelState = 1;

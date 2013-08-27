@@ -3,18 +3,18 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes')  
-  , http = require('http')
-  , path = require('path')
-  //, expressValidator = require('express-validator')
-  , redis = require('redis')
-  , client = redis.createClient();
+var express = require('express'),
+	http = require('http'),
+	path = require('path'),
+	//expressValidator = require('express-validator')
+	//redis = require('redis'),
+	mongoose = require('mongoose');
+	//client = redis.createClient();
 
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3030);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -37,11 +37,24 @@ if ('development' == app.get('env')) {
 // need to set post count key if not already set
 //client.SETNX('curPostIndex', '0');
 
-app.get('/', routes.index);
-app.get('/api/info', routes.info);
-app.get('/api/posts', routes.posts);
-app.post('/api/create', routes.create);
 
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+// connect to the db
+mongoose.connect('mongodb://localhost/turtleraffle');
+
+// confirm db connection
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'mongo connection error:'));
+db.once('open', function callback () {
+	// init db modelling + other server init
+	var routes = require('./routes');
+
+	app.get('/', routes.index);
+	app.get('/api/info', routes.info);
+	app.get('/api/posts', routes.posts);
+	app.post('/api/create', routes.create);
+
+	// init the web server
+  	http.createServer(app).listen(app.get('port'), function(){
+  		console.log('Turtle Raffle server listening on port ' + app.get('port'));
+	});
 });
