@@ -6,11 +6,9 @@
 var express = require('express'),
 	http = require('http'),
 	path = require('path'),
-	//expressValidator = require('express-validator')
-	//redis = require('redis'),
+	expressValidator = require('express-validator'),
 	mongoose = require('mongoose');
-	//client = redis.createClient();
-
+	
 var app = express();
 
 // all environments
@@ -20,7 +18,7 @@ app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
-//app.use(expressValidator);
+app.use(expressValidator());
 app.use(express.methodOverride());
 app.use(express.cookieParser('maaaargh...turtle turtle!'));
 app.use(express.session());
@@ -32,11 +30,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
-
-// initialise any db requirements
-// need to set post count key if not already set
-//client.SETNX('curPostIndex', '0');
-
 
 // connect to the db
 mongoose.connect('mongodb://localhost/turtleraffle');

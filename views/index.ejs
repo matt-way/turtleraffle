@@ -36,7 +36,7 @@
 		</div>
 	</div>
 
-<div class="container">
+	<div class="container">
 		<div class="row">
 			<div class="col-span-8 col-offset-2 tr-top">
 				<div class="desc-left">
@@ -52,7 +52,14 @@
 				</div>
 			</div>
 		</div>	
-		<div ng-view>
+		<div ng-view></div>
+	</div>
+
+	<div class="message-container" ng-show="message.showMessage">
+		<div class="message">
+			<div class="msg-text">{{message.text}}</div>
+			<button class="btn msg-btn" ng-click="msgClick()">OK</button>
+		</div>
 	</div>
 	
 	<script src="lib/angular/angular.min.js"></script>

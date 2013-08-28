@@ -24,6 +24,7 @@ a {
 .banner {
 	height: 40px;
 	background-color: @white;
+	border-bottom: 1px solid #aaaaaa;
 }
 
 .banner-container {
@@ -41,6 +42,8 @@ a {
 	font-weight: 900;
 	color: @darktext;
 
+	text-shadow: 1px 1px 1px #DFDFDF;
+
 	a {
 		color: @darktext;
 
@@ -56,6 +59,9 @@ a {
 	float: left;
 	margin-left: 11px;
 	margin-top: 5px;
+
+	color: #727272;
+	font-style: italic;
 }
 
 .tr-top {
@@ -151,4 +157,49 @@ a {
 
 .button-gap {
 	height: 10px;
+}
+
+label {
+	display: block;
+}
+
+/* form error */
+.err-notice {
+	background-color: #fcf2f2;
+	padding: 1px 10px;
+	border-left: 3px solid #df7c7b;
+	margin-top: 15px;
+
+	h4 {
+		font-weight: bold;
+	}
+}
+
+/* modal message styles */
+.message-container {	
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background-color: rgba(0, 0, 0, 0.5);
+
+	.message {
+		background-color: #fff;
+		position: fixed;
+		padding: 20px;
+		width: 350px;
+		top: 10%;
+		left: 50%;
+		margin-left: -175px;	
+
+		.msg-text {
+			margin-bottom: 20px;
+		}	
+
+		.msg-btn {			
+			float: right;
+		}	
+	}
 }

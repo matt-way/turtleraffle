@@ -82,25 +82,7 @@ form validation
 
 26-8-13
 TODO:
-setup post model in mongo (CRUD)
-figure out how to do random post selection and db clearing
-get posts creating successfully
-get timer process running (start with 20 seconds or so)
-	- need to cater for crashing, etc, so use a time store or something
-get random selection working (if available)
-	- selects random post (no clearing for the moment)
-	- runs embedly on url if applicable
-	- stores post information in current post area
-temporarily turn off random selection (after one has been selected)
-on server load, grab the current post if one is available
 get current post loading on main screen
-get client working on countdown
-	- timer needs to say loading... or something
-	- timer also needs to reset correctly
-	- post needs to update correctly
-		- need to take into account situation when user is on entry page
-what happens if user tries to enter new post during selection process?
-need to add limits and errors on form entry
 perform local testing
 	- might have to ignore captcha stuff (could look into aussie captcha thing too)
 	- make sure everything is ready to roll
@@ -120,4 +102,27 @@ test facebook/twitter links (twitter first maybe)
 ---------
 CELEBRATE
 ---------
+
+
+
+can we come up with a simpler version?
+
+
+what if we use websockets this time around?
+- broadcasts have some minimum wait period (so that 1000 entries in the same second so cause 1000 site wide broadcasts)
+
+- on page load, the time is given which is used for count-down
+- the total entries is also given on load
+- a websocket is created
+- the websocket can send multiple things
+	- the first is the increasing entry count (buffered)
+	- the second is a refresh when the next post is drawn
+		- timer simply broadcasts new data (plus new target time to browser)
+
+- ok so what about post creation flow?
+	- user clicks button, and form loads seamlessly (as per current)
+	- on create, if valid, user is routed back to main page, but success flag is passed which causes notice
+		- notice can just be a centred overlay box, with transparent background, and close button
+
+on load run the init job
 

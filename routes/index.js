@@ -1,52 +1,64 @@
 /**
 Routes
 **/
-var sa = require('superagent');
-  //, redis = require('redis')
-  //, client = redis.createClient();
+var sa = require('superagent'),
+	Post = require('../models/post'),
+	DisplayPost = require('../models/displayPost'),
+	Settings = require('../models/settings'),
+	Embedly = require('embedly'),
+	util = require('util');
+  
+var settings = null;
 
+var EMBEDLY_KEY = 'f6314fb0aa1d11e18f9f4040aae4d8c9';
 
-exports.index = function(req, res){
-	console.log('hi there');
+// returns the app to the user
+exports.index = function(req, res){	
  	// simply return the main page
  	res.render('index', { title: 'Turtle Raffle' });
 };
 
+// returns the current timer info and entry count to the user
 exports.info  = function(req, res){
-	// user is requesting the next draw time, and the number of entries
-	var dTime = 1576800000000;	
-	var output = { 
-		entryCount: 5,
-		drawTime: dTime
-	};
-	res.send(output);
+	var dTime = null;	
+	if(settings){
+		dTime = settings.nextDrawTime.getTime();
+	}
+
+	Post.count({}, function(err, eCount){		
+		// user is requesting the next draw time, and the number of entries	
+		var output = { 
+			entryCount: eCount,
+			drawTime: dTime
+		};
+		res.send(output);
+	});	
 };
 
+// returns the currently selected post to the user
 exports.posts = function(req, res){
 	// user is requesting the current winner post/s
-	
-	// get the winning post from redis
+	DisplayPost.findOne(function(err, _post){
+		if(err) { console.log(err); }
 
-	// if it doesn't exist replace with default
-
-	var output = { post: {
-		id: '5a',
-		title: 'some title',
-		media: '<img src="blahblah.jpg"/>',
-		body: 'This is some body text. Need to figure out breaks.',
-		name: '<a href="www.twitter.com/person">@Someperson</a>'
-	}};
-	res.send(output);
+		if(_post){
+			res.send(_post);
+		}else{
+			res.send(null);
+		}
+	});	
 };
 
 exports.create = function(req, res, next){
 	// validate the post
 	// perform size bounds checks
-	req.assert('title', 'Title is required.').notEmpty();
-	req.assert('body', 'Content text is required.').notEmpty();
+	req.assert('title', 'Title is required.').notEmpty().len(1, 200);
+	req.assert('body', 'Content text is required.').notEmpty().len(1, 1024);
 
 	var errors = req.validationErrors();
 	if(!errors){
+
+		/*
 		// validate the captcha
 		sa.post('http://verify.solvemedia.com/papi/verify')
 		//.set('Accept', 'application/json')
@@ -60,67 +72,179 @@ exports.create = function(req, res, next){
 
 			// if the captcha is correct
 			// add the post to the db
-			
-			// return the new count
 
-
-			// get the next available index
-			
-
-			/*
-			client.INCR('curPostIndex', function(err, result){
-				if(err) { return res.next(err); }
-
-				var postData = {
-					title: req.body.title,
-					media: req.body.media || '',
-					body: req.body.body,
-					author: req.body.name
-				};
-
-				// store post at the new index
-				client.SET('post' + result, postData, function(err, result){
-					if(err) { return res.next(err); }
-					// post stored successfully
-					return res.send(true);
-				})
-			})
-			*/
 		});
+		*/
+
+		// save post in database
+		var newPost = new Post({
+			title: req.body.title,
+			media: req.body.media || {},
+			body: req.body.body,
+			author: req.body.author || {}
+		});
+
+		newPost.save(function(err, newPost){
+			if(err) {
+				console.log(err);
+				res.send(err);
+			}
+
+			res.send(true);
+		});
+
 	}else{
 		res.send(errors);
 	}
 };
 
-exports.resetProcess = function() {
-	// get the current index
+// given a selected post object, the data is processed and the primary post is selected
+exports.setDisplayPost = function(_post, _callback) {
+	// run the post link through embedly if a link is given
 
-	// randomly select a post from the index
+	if(_post.media){
+		// run embedly on the url
+		new Embedly({key: EMBEDLY_KEY}, function(err, api) {
+			if(!!err){
+				console.log('Error creating Embedly api');
+				return next(err);
+			}
 
-	// use embedly to get the html of the media query if any
+			var url = _post.media;
+			api.oembed({url: url}, function(err, objs){
+				if(!!err){
+					console.log('embedly request failed');
+					return next(err);
+				}
 
-	// store the post data in the winner key
+				console.log(util.inspect(objs[0]));
+					
+				// create an embed node with the given data
+				var obj = objs[0];
 
-	// reset the current post index back to 0
+				var dPost = new DisplayPost({
+					title: _post.title,
+					mediaURI: url,
+					mediaThumbnail: obj.thumbnail_url,
+					mediaHTML: obj.html,
+					mediaTitle: obj.title,
+					mediaDescription: obj.description,
+					body: _post.body,
+					author: _post.author
+				});	
 
-	// set the next timestamp to now + 23 hours
+				DisplayPost.find().remove();
+				dPost.save(function(err){
+					if(err) { return _callback(err); }
 
+					_callback();
+				});		
+			});
+		});
+	}else{
+		var dPost = new DisplayPost({
+			title: _post.title,
+			body: _post.body,
+			author: _post.author
+		});	
+
+		DisplayPost.find().remove();
+		dPost.save(function(err){
+			if(err) { return _callback(err); }
+
+			return _callback();
+		});		
+	}
 };
 
-// the cron function for dealing with the 23 hour reset
+// Draws the next post to display, clears the db's and resets the timer
+exports.drawPost = function() {
+	// randomly select a post from the database
+	Post.random(function(err, _post){
+		if(err) { console.log(err); }
+
+		// make sure we have posts to choose from
+		if(_post){
+			// process the new post (embedly, etc.)
+			exports.setDisplayPost(_post, function(err){
+				if(err) { console.log(err); }
+
+				// clear the post database
+				Post.find().remove();
+
+				// reset the timer
+				exports.resetTimer();
+			})
+
+		}else{
+			console.log('no entries to choose randomly from');
+
+			// reset the timer anyway for next period
+			exports.resetTimer();
+		}
+	});
+};
+
+// start the schedule for post selection process
+exports.startSchedule = function() {
+	if(settings){		
+		// start the timer for the next reset
+		setTimeout(function() {
+			exports.drawPost();
+		}, settings.nextDrawTime - Date.now());
+	}else{
+		console.log('fatal error, no timer to start schedule by');
+	}
+};
+
+// called by the end of the draw post process to reset the timer and restart the schedule
+exports.resetTimer = function() {
+	if(settings){
+		settings.nextDrawTime = exports.getNextDrawTime();
+
+		exports.startSchedule();
+
+		settings.save(function(err){
+			if(err) { console.log(err); }
+		});
+	}
+};
+
+// get the next draw time
+exports.getNextDrawTime = function() {	
+	var curDate = new Date();
+	// increment now by 23 hours
+	//var increment = 23 * 60*60*1000;
+	var increment = 60*1000;
+	return curDate.setTime(curDate.getTime() + increment);	
+};
+
+// the primary cron function for turtle raffle, handles the settings and setting up the initial schedule
 exports.turtleJob = function() {
-	// get the next timestamp for the next reset
+	// firstly check if the settings object exists, and create one if it does not
+	Settings.findOne(function(err, _settings){
+		if(err) { console.log(err); }
 
-	// if it doesn't exist set it for the gap time from now
+		if(!_settings){
+			console.log('creating initial settings object');
+			settings = new Settings();
+		}else{
+			settings = _settings;
+		}
 
-	// if the reset time is before now perform an initial reset
+		// if there is no next draw time or an invalid next draw time, start the choosing process
+		if(!settings.nextDrawTime || _settings.nextDrawTime.getTime() < new Date().getTime()){
+			exports.drawPost();			
+		}else{
+			// otherwise start the schedule
+			exports.startSchedule();
+		}
 
-	// start the timer for the next reset
-	/*setInterval(due - Date.now(), function() {
-		this.resetProcess();
-		// restart the process
-		turtleJob();
-	});*/
+		// make sure the settings persist		
+		settings.save(function(err){
+			if(err) { console.log(err); }
+		});
+	});
 };
 
 // run the first turtle job
