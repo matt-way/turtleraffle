@@ -3,7 +3,7 @@ Routes
 **/
 var sa = require('superagent'),
 	Post = require('../models/post'),
-	DisplayPost = require('../models/displayPost'),
+	DisplayPost = require('../models/displaypost'),
 	Settings = require('../models/settings'),
 	Embedly = require('embedly'),
 	util = require('util');
