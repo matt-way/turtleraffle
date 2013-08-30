@@ -6,11 +6,23 @@
 </div>			
 <div class="row">
 	<div class="col-span-8 col-offset-2 tr-post">				
-		<div class="winner">Current Winner</div>
-		<div class="media" ng-bind-html-unsafe="post.media"></div>
-		<div class="post-title">{{post.title}}</div>
+		<div class="winner"><span class="wintext">Current Winner</span></div>
+		<div ng-switch="post.mediaType" class="media-container">
+			<div ng-switch-when="photo" class="media">
+				<a target="_blank" href="{{post.mediaURI}}"><img ng-src="{{post.mediaURI}}"/></a>
+			</div>
+			<div ng-switch-when="video" class="media" fluid-iframe="" ng-bind-html-unsafe="post.mediaHTML"></div>				
+			<div ng-switch-when="rich" class="media" fluid-iframe="widthOnly" ng-bind-html-unsafe="post.mediaHTML"></div>				
+			<div ng-switch-when="link" class="media">
+				<a target="_blank" href="{{post.mediaURI}}"><img ng-src="{{post.mediaThumbnail}}"/></a>	
+				<div class="sub-title">
+					<a target="_blank" href="{{post.mediaURI}}">{{post.mediaTitle}}</a>	
+				</div>
+			</div>
+		</div>		
+		<div class="post-title" ng-show="post.mediaType"><a target="_blank" href="{{post.mediaURI}}">{{post.title}}</a></div>
+		<div class="post-title" ng-show="!post.mediaType">{{post.title}}</div>
 		<div class="post-body">{{post.body}}</div>
-		<div class="post-handle">{{post.name}}</div>
+		<div class="post-author"><span>- </span><span>{{post.author || 'Anonymous'}}</span></div>
 	</div>
 </div>
-	

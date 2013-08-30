@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var displayPostSchema = new mongoose.Schema({
 	title: String,
 	mediaURI: String,
+	mediaType: String,
 	mediaThumbnail: String,
 	mediaHTML: String,
 	mediaTitle: String,

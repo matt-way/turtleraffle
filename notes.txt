@@ -126,3 +126,10 @@ what if we use websockets this time around?
 
 on load run the init job
 
+
+how do we want the post display to work?
+- as it is only one object html maybe we can just load the html?
+- show embed html if available
+	- if link but no html, just show the link
+- if there is a link, make the title linkable
+- if there is no author, write anonymous

@@ -12,11 +12,8 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 .controller('MainCtrl', function($scope, $http, $timeout){
 
 	$scope.timerInfo = {};
-
 	$scope.message = { showMessage: false };	
-
-	$scope.globals = { entryCount: 0 };	
-	//$scope.timeLeft = 0;
+	$scope.globals = { entryCount: 0 };		
 
 	// tell post controller to look for new posts
 	function requestPosts(){
@@ -77,12 +74,12 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 				$scope.globals.entryCount = data.entryCount;
 
 				// update the countdown timer				
-				if($scope.drawTime != data.drawTime){
+				//if($scope.drawTime != data.drawTime){
 					$scope.drawTime = data.drawTime;					
 					if(_callback){
 						_callback();
 					}
-				}
+				//}
 
 				// short poll the entry count (every min)
 				$scope.timerInfo.infoTickPromise = $timeout($scope.timerInfo.infoTick, 60000);
@@ -108,13 +105,22 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 	};
 })
 .controller('PostCtrl', function($scope, $http, $timeout){
+	var attempts = 0;
 
 	$scope.timerInfo.getPosts = function() {
 		$http({method: 'GET', url: '/api/posts'}).
 			success(function(data, status, headers, config){								
-				// update the post if applicable
+				// update the post if applicable				
 				if($scope.post === undefined || data._id != $scope.post._id){					
-					$scope.post = data;
+					$scope.post = data;					
+					attempts = 0;
+				}else{
+					// if the same post was returned, it may be because the server
+					// hasn't updated just yet, so keep having attempts
+					if(attempts < 6){
+						attempts++;
+						$timeout($scope.timerInfo.getPosts, 5000);	
+					}
 				}
 			}).
 			error(function(data, status, headers, config){
@@ -180,5 +186,45 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 			$location.path('/');
 		}
 	}
-});
+})
+.directive('fluidIframe', ['$timeout', function($timeout){
+	return {
+		restrict: 'A',
+		link: function(scope, elem, attrs) {
+			// needs to be called post rendering so that the iframe exists
+			var iframeOn = function(){
+				var iframes = elem.find('iframe');	
+				console.log(iframes);
+				for(var i=0;i<iframes.length;i++){
+					var iframe = iframes[i];
+
+					if(attrs.fluidIframe == 'widthOnly'){
+						iframe.width          = '100%';
+					}else{
+						var videoRatio = (iframe.height / iframe.width) * 100;
+
+						// From fluidvids.js
+						iframe.style.position = 'absolute';
+	            		iframe.style.top      = '0';
+	            		iframe.style.left     = '0';
+	            		iframe.width          = '100%';
+	            		iframe.height         = '100%';
+
+	            		var wrap              = document.createElement( 'div' );
+	            		wrap.className        = 'fluid-vids';
+	            		wrap.style.width      = '100%';
+	            		wrap.style.position   = 'relative';
+	            		wrap.style.paddingTop = videoRatio + '%';
+
+						var iframeParent      = iframe.parentNode;
+	            		iframeParent.insertBefore( wrap, iframe );
+	            		wrap.appendChild( iframe );				
+	            	}	
+				}							
+			};
+			// needs more than 0 delay to access post rendering
+			$timeout(iframeOn, 100);			
+		}
+	};
+}]);
 	

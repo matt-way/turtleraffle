@@ -126,6 +126,7 @@ exports.setDisplayPost = function(_post, _callback) {
 					title: _post.title,
 					mediaURI: url,
 					mediaThumbnail: obj.thumbnail_url,
+					mediaType: obj.type,
 					mediaHTML: obj.html,
 					mediaTitle: obj.title,
 					mediaDescription: obj.description,

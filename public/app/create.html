@@ -13,7 +13,7 @@
 					<textarea rows="7" name="body" ng-model="post.body" required></textarea>
 					<span class="help-block">Write what ever you want here.</span>
 					<label>4. Name</label>
-					<input type="text" name="name" ng-model="post.name">
+					<input type="text" name="name" ng-model="post.author">
 					<span class="help-block">Enter a name to go at the bottom of the post.</span>
 					<label>5. Captcha</label>
 					
@@ -26,11 +26,11 @@
 					</script>
 					<script type="text/javascript" src="http://api.solvemedia.com/papi/challenge.script?k=zxEtcKYEGz3EM0YXVjEa7hE6sedQUwM-">
   					</script>
-  					
+  					<noscript>
      					<iframe src="http://api.solvemedia.com/papi/challenge.noscript?k=YnCyOHzZqMrZl6GYIZ561u51hbV-gfZ0" height="150" width="300" frameborder="0"></iframe><br/>
      					<textarea name="adcopy_challenge" ng-model="adcopy_challenge" rows="3" cols="40"></textarea>
-     					<input type="hidden" name="adcopy_response"	value="manual_challenge" ng-model="post.adcopy_response" required />		
-     				
+     					<input type="hidden" name="adcopy_response"	value="manual_challenge" ng-model="post.adcopy_response" required />
+     				</noscript>     				
 					
 					<span class="help-block">Let's make sure you are human.</span>
 					<div class="button-gap"></div>
