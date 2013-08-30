@@ -221,8 +221,8 @@ exports.resetTimer = function() {
 exports.getNextDrawTime = function() {	
 	var curDate = new Date();
 	// increment now by 23 hours
-	//var increment = 23 * 60*60*1000;
-	var increment = 60*1000;
+	var increment = 23 * 60*60*1000;
+	//var increment = 60*1000;
 	return curDate.setTime(curDate.getTime() + increment);	
 };
 
