@@ -144,7 +144,7 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 	$scope.errorText = '';
 	
 	// temporary captcha result
-	$scope.post = { adcopy_response: 'a' };
+	//$scope.post = { adcopy_response: 'a' };
 
 	// post button
 	$scope.createPost = function(_post){
@@ -153,17 +153,33 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 
 		$scope.showError = false;
 		$scope.cancelState = 0;
-		$scope.cancelText = 'Cancel';				
+		$scope.cancelText = 'Cancel';		
 
-		if(_post.$valid){
+		// hack to get the response of the solve media captcha
+		// should be handled via form api through directive.
+		if($scope.post){
+			$scope.post.adcopy_response = ACPuzzle.get_response();
+			$scope.post.adcopy_challenge = ACPuzzle.get_challenge();
+		}	
+
+		if(_post.$valid && $scope.post.adcopy_response && $scope.post.adcopy_response.length > 0){
 			$http.post('/api/create', $scope.post).
 				success(function(data, status, headers, config){
-					console.log($scope.globals);
-					$scope.globals.entryCount += 1;
-					$scope.$emit('message', 'Congratulations, your post has been entered successfully. Good luck!', function(){
-						// go back to main page
-						$location.path('/');	
-					});					
+					console.log(data);
+					if(data == 'true'){
+						console.log($scope.globals);
+						$scope.globals.entryCount += 1;
+						$scope.$emit('message', 'Congratulations, your post has been entered successfully. Good luck!', function(){
+							// go back to main page
+							$location.path('/');	
+						});					
+					}else{
+						$scope.showError = true;						
+						$scope.errorText = data;
+						$scope.btnDisabled = false;
+						// load another question
+						ACPuzzle.reload();
+					}
 				}).
 				error(function(data, status, headers, config){					
 					$scope.showError = true;
@@ -224,6 +240,30 @@ angular.module('turtleRaffle', [], function($routeProvider, $locationProvider){
 			};
 			// needs more than 0 delay to access post rendering
 			$timeout(iframeOn, 100);			
+		}
+	};
+}])
+.directive('solveMediaCaptcha', ['$timeout', function($timeout){
+	return {
+		restrict: 'A',
+		link: function(scope, elem, attrs){
+     		var afterLoad = function(){
+     			// make sure the puzzle has loaded
+     			if(typeof ACPuzzle !== 'undefined'){     				
+     				var ACPuzzleOptions = {
+						theme:	'white',
+						lang:	'en',
+						size:	'300x150'
+					};
+			
+					//ACPuzzle.create('zxEtcKYEGz3EM0YXVjEa7hE6sedQUwM-', 'acwidget', ACPuzzleOptions); // local dev key
+					ACPuzzle.create('YnCyOHzZqMrZl6GYIZ561u51hbV-gfZ0', 'acwidget', ACPuzzleOptions);
+				}else{
+					$timeout(afterLoad, 500);
+				}
+     		};
+     		// need a large enough delay to make sure captcha object has been created
+     		$timeout(afterLoad, 200);     		     		
 		}
 	};
 }]);

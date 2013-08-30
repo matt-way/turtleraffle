@@ -55,14 +55,15 @@
 		<div ng-view></div>
 	</div>
 
-	<div class="message-container" ng-show="message.showMessage">
+	<div class="message-container" ng-show="message.showMessage" ng-cloak="">
 		<div class="message">
 			<div class="msg-text">{{message.text}}</div>
 			<button class="btn msg-btn" ng-click="msgClick()">OK</button>
 		</div>
 	</div>
-	
-	<script src="lib/angular/angular.js"></script>
-	<script src="app/main.js"></script>
+		
+	<script type="text/javascript" src="http://api.solvemedia.com/papi/challenge.ajax"></script>
+	<script type="text/javascript" src="lib/angular/angular.js"></script>	
+	<script type="text/javascript" src="app/main.js"></script>
 </body>
 </html>

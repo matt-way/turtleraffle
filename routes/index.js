@@ -12,6 +12,9 @@ var settings = null;
 
 var EMBEDLY_KEY = 'f6314fb0aa1d11e18f9f4040aae4d8c9';
 
+//var SOLVE_MEDIA_KEY = 'OKpkQc1XcHVw3Nl5jWyqfwT7p0bB6Q2.'; // local dev key
+var SOLVE_MEDIA_KEY = '8ZW0RfG-FN9I180HTr2Zb3bg2HkZEYHH';
+
 // returns the app to the user
 exports.index = function(req, res){	
  	// simply return the main page
@@ -54,45 +57,48 @@ exports.create = function(req, res, next){
 	// perform size bounds checks
 	req.assert('title', 'Title is required.').notEmpty().len(1, 200);
 	req.assert('body', 'Content text is required.').notEmpty().len(1, 1024);
+	req.assert('adcopy_response', 'Captcha response is required.').notEmpty();
 
 	var errors = req.validationErrors();
 	if(!errors){
 
-		/*
+		var inputObj = 'privatekey=' + SOLVE_MEDIA_KEY + 
+					   '&challenge=' + req.body.adcopy_challenge + 
+					   '&response='  + req.body.adcopy_response +
+					   '&remoteip='  + (req.headers['X-Forwarded-For'] || req.connection.remoteAddress);
+		
 		// validate the captcha
 		sa.post('http://verify.solvemedia.com/papi/verify')
-		//.set('Accept', 'application/json')
-		//.set('Content-Type', 'application/json')
-		.send({ privatekey: key,
-				challenge: req.body.adcopy_challenge,
-				response: req.body.adcopy_response,
-				remoteip: req.headers['X-Forwarded-For'] })
-		.end(function(result){
-			console.log(util.inspect(result, false, null));
+			.type('form')
+			.send(inputObj)
+			.end(function(result){
+				var results = result.text.split('\n');
+				if(results[0] == 'true'){
+					// save post in database
+					var newPost = new Post({
+						title: req.body.title,
+						media: req.body.media || {},
+						body: req.body.body,
+						author: req.body.author || {}
+					});
 
-			// if the captcha is correct
-			// add the post to the db
+					newPost.save(function(err, newPost){
+						if(err) {
+							console.log(err);
+							res.send(err);
+						}
 
-		});
-		*/
-
-		// save post in database
-		var newPost = new Post({
-			title: req.body.title,
-			media: req.body.media || {},
-			body: req.body.body,
-			author: req.body.author || {}
-		});
-
-		newPost.save(function(err, newPost){
-			if(err) {
-				console.log(err);
-				res.send(err);
-			}
-
-			res.send(true);
-		});
-
+						res.send(true);
+					});
+				}else{
+					console.log(results);
+					if(results.length > 1 && results[1].length <= 0){
+						res.send('Captcha response was incorrect.');
+					}else{
+						res.send(results[1]);
+					}
+				}
+			});
 	}else{
 		res.send(errors);
 	}
